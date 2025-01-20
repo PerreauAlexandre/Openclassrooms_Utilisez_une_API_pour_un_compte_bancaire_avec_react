@@ -6,10 +6,10 @@ function Header() {
 
   function links() {
     switch (location.pathname) {
-      case '/User':
+      case '/user':
         return (
           <>
-            <Link to="/User" className="main-nav-item">
+            <Link to="/user" className="main-nav-item">
               <i className="fa fa-user-circle"></i>
               Tony
             </Link>
@@ -21,7 +21,7 @@ function Header() {
         )
       default:
         return (
-          <Link to="/SignIn" className="main-nav-item">
+          <Link to="/sign-in" className="main-nav-item">
             <i className="fa fa-user-circle"></i>
             Sign In
           </Link>
