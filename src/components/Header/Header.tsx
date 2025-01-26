@@ -1,8 +1,14 @@
 import { Link, useLocation } from 'react-router-dom'
-import argentBankLogo from "../../assets/argentBankLogo.png"
+import { useSelector } from 'react-redux'
+import { getUserFirstName } from '../../app/selector'
+import argentBankLogo from '../../assets/argentBankLogo.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 function Header() {
   const location = useLocation()
+  const userFirstName = useSelector(getUserFirstName)
 
   function links() {
     switch (location.pathname) {
@@ -10,11 +16,11 @@ function Header() {
         return (
           <>
             <Link to="/user" className="main-nav-item">
-              <i className="fa fa-user-circle"></i>
-              Tony
+              <FontAwesomeIcon icon={faCircleUser} />
+              {userFirstName}
             </Link>
             <Link to="/" className="main-nav-item">
-              <i className="fa fa-sign-out"></i>
+              <FontAwesomeIcon icon={faRightFromBracket} />
               Sign Out
             </Link>
           </>
@@ -22,7 +28,7 @@ function Header() {
       default:
         return (
           <Link to="/sign-in" className="main-nav-item">
-            <i className="fa fa-user-circle"></i>
+            <FontAwesomeIcon icon={faCircleUser} />
             Sign In
           </Link>
         )

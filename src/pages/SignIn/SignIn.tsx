@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useLoginMutation } from '../../services/userApi'
 import { useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 
 function SignIn() {
   const navigate = useNavigate()
@@ -14,16 +16,16 @@ function SignIn() {
   }
 
   useEffect(() => {
-    if (isSuccess && data?.body?.token) {
+    if (isSuccess && data) {
       localStorage.setItem('token', data.body.token)
       navigate('/user')
     }
-  }, [isSuccess, data?.body?.token, navigate])
+  }, [isSuccess, data, navigate])
 
   return (
     <main className="main bg-dark">
       <section className="sign-in-content">
-        <i className="fa fa-user-circle sign-in-icon"></i>
+        <FontAwesomeIcon icon={faCircleUser} className="sign-in-icon" />
         <h1>Sign In</h1>
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">

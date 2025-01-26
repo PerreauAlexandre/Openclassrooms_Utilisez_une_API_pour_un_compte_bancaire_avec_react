@@ -1,9 +1,13 @@
 import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setUser } from './userSlice'
 import { useGetUserMutation } from '../../services/userApi'
 
 function User() {
-  const [getUser, { isLoading, isError, data }] = useGetUserMutation()
+  const dispatch = useDispatch()
+  const [getUser, { isLoading, isError, isSuccess, data }] =
+    useGetUserMutation()
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -12,6 +16,12 @@ function User() {
 
     fetchUserData()
   }, [getUser])
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setUser(data.body))
+    }
+  }, [isSuccess, data, dispatch])
 
   return isLoading ? (
     <div>Loading...</div>
