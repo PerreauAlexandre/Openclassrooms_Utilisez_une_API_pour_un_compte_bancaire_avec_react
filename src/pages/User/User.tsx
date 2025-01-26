@@ -1,11 +1,29 @@
+import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
+import { useGetUserMutation } from '../../services/userApi'
+
 function User() {
-  return (
+  const [getUser, { isLoading, isError, data }] = useGetUserMutation()
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      await getUser(null)
+    }
+
+    fetchUserData()
+  }, [getUser])
+
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : isError ? (
+    <Navigate to="/error" />
+  ) : (
     <main className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {`${data?.body.firstName} ${data?.body.lastName} !`}
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>

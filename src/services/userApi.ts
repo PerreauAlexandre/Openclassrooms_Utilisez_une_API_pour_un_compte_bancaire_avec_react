@@ -6,9 +6,23 @@ type LoginRequest = {
 }
 
 type LoginResponse = {
+  status: number
   message: string
   body: {
     token: string
+  }
+}
+
+type getUserResponse = {
+  status: number
+  message: string
+  body: {
+    email: string
+    firstName: string
+    lastName: string
+    createdAt: string
+    updatedAt: string
+    id: string
   }
 }
 
@@ -23,7 +37,16 @@ export const userApi = createApi({
         body: loginParams,
       }),
     }),
+    getUser: builder.mutation<getUserResponse, null>({
+      query: () => ({
+        url: 'user/profile',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }),
+    }),
   }),
 })
 
-export const { useLoginMutation } = userApi
+export const { useLoginMutation, useGetUserMutation } = userApi

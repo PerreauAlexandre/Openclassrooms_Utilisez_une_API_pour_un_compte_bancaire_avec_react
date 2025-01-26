@@ -202,6 +202,14 @@ body {
   font-size: 1.2rem;
 }
 
+.sign-in-fail {
+  color: red;
+}
+
+.sign-in-success {
+  color: #00bc77;
+}
+
 .footer {
   display: flex;
   justify-content: center;

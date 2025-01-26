@@ -1,15 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLoginMutation } from '../../services/userApi'
+import { useNavigate } from 'react-router-dom'
 
 function SignIn() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [login, { isLoading, isError, data }] = useLoginMutation()
+  const [login, { isLoading, isSuccess, isError, data }] = useLoginMutation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     await login({ email, password })
   }
+
+  useEffect(() => {
+    if (isSuccess && data?.body?.token) {
+      localStorage.setItem('token', data.body.token)
+      navigate('/user')
+    }
+  }, [isSuccess, data?.body?.token, navigate])
 
   return (
     <main className="main bg-dark">
@@ -17,10 +26,6 @@ function SignIn() {
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
         <form onSubmit={handleSubmit}>
-          {/* <div className="input-wrapper">
-            <label htmlFor="username">Username</label>
-            <input type="text" id="username" />
-          </div> */}
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
             <input
@@ -44,10 +49,9 @@ function SignIn() {
             <label htmlFor="remember-me">Remember me</label>
           </div>
           <button className="sign-in-button" type="submit">
-            Sign In
+            {isLoading ? 'Loading...' : 'Sign In'}
           </button>
-          {isError && <p style={{ color: 'red' }}>Failed to log in</p>}
-          {data && <p>Logged in successfully. Token: {data.body.token}</p>}
+          {isError && <p className="sign-in-fail">Failed to log in</p>}
         </form>
       </section>
     </main>
