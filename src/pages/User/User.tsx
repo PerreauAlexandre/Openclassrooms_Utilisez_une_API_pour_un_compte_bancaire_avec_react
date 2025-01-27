@@ -1,13 +1,23 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setUser } from './userSlice'
 import { useGetUserMutation } from '../../services/userApi'
+import EditUser from '../../components/EditUser/EditUser'
 
 function User() {
   const dispatch = useDispatch()
   const [getUser, { isLoading, isError, isSuccess, data }] =
     useGetUserMutation()
+
+  const [isEditOpen, setIsEditOpen] = useState(false)
+
+  function openEdit() {
+    setIsEditOpen(true)
+  }
+  function closeEdit() {
+    setIsEditOpen(false)
+  }
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,7 +45,15 @@ function User() {
           <br />
           {`${data?.body.firstName} ${data?.body.lastName} !`}
         </h1>
-        <button className="edit-button">Edit Name</button>
+        <button className={`edit-button ${isEditOpen ? "hidden" : ""}`} onClick={openEdit}>
+          Edit Name
+        </button>
+        <EditUser 
+          userFirstName={data?.body.firstName}
+          userLastName={data?.body.lastName}
+          isEditOpen={isEditOpen} 
+          closeEdit={closeEdit} 
+        />
       </div>
       <h2 className="sr-only">Accounts</h2>
       <section className="account">

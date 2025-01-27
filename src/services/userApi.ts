@@ -26,6 +26,20 @@ type getUserResponse = {
   }
 }
 
+type updateRequest = {
+  firstName: string
+  lastName: string
+}
+
+type updateResponse = {
+  status: number
+  message: string
+  body: {
+    id: string
+    email: string
+  }
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api/v1/' }),
@@ -46,7 +60,17 @@ export const userApi = createApi({
         },
       }),
     }),
+    updateUser: builder.mutation<updateResponse, updateRequest>({
+      query: (updateParams) => ({
+        url: 'user/profile',
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: updateParams,
+      }),
+    }),
   }),
 })
 
-export const { useLoginMutation, useGetUserMutation } = userApi
+export const { useLoginMutation, useGetUserMutation, useUpdateUserMutation } = userApi
