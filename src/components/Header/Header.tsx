@@ -10,6 +10,10 @@ function Header() {
   const location = useLocation()
   const userFirstName = useSelector(getUserFirstName)
 
+  function handleLogOut() {
+    localStorage.removeItem('token')
+  }
+
   function links() {
     switch (location.pathname) {
       case '/user':
@@ -19,7 +23,7 @@ function Header() {
               <FontAwesomeIcon icon={faCircleUser} />
               {userFirstName}
             </Link>
-            <Link to="/" className="main-nav-item">
+            <Link to="/" className="main-nav-item" onClick={handleLogOut}>
               <FontAwesomeIcon icon={faRightFromBracket} />
               Sign Out
             </Link>
