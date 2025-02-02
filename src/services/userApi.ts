@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { RootState } from '../app/store'
 
 type LoginRequest = {
   email: string
@@ -42,7 +43,16 @@ type updateResponse = {
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api/v1/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:3001/api/v1/',
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).signIn.token
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`)
+      }
+      return headers
+    },
+  }),
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (loginParams) => ({
@@ -55,22 +65,17 @@ export const userApi = createApi({
       query: () => ({
         url: 'user/profile',
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
       }),
     }),
     updateUser: builder.mutation<updateResponse, updateRequest>({
       query: (updateParams) => ({
         url: 'user/profile',
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
         body: updateParams,
       }),
     }),
   }),
 })
 
-export const { useLoginMutation, useGetUserMutation, useUpdateUserMutation } = userApi
+export const { useLoginMutation, useGetUserMutation, useUpdateUserMutation } =
+  userApi

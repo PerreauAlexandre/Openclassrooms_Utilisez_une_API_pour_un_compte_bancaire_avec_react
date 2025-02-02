@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Navigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import { setUser } from './userSlice'
 import { useGetUserMutation } from '../../services/userApi'
+import { getUserFirstName, getUserLastName } from '../../app/selector'
 import EditUser from '../../components/EditUser/EditUser'
 
 function User() {
   const dispatch = useDispatch()
+  const userFirstName = useSelector(getUserFirstName)
+  const userLastName = useSelector(getUserLastName)
   const [getUser, { isLoading, isError, isSuccess, data }] =
     useGetUserMutation()
 
-  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false)
 
   function openEdit() {
     setIsEditOpen(true)
@@ -19,13 +22,13 @@ function User() {
     setIsEditOpen(false)
   }
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      await getUser(null)
-    }
+  const fetchUserData = useCallback(async () => {
+    await getUser(null);
+  }, [getUser]);
 
+  useEffect(() => {
     fetchUserData()
-  }, [getUser])
+  }, [fetchUserData])
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -43,16 +46,20 @@ function User() {
         <h1>
           Welcome back
           <br />
-          {`${data?.body.firstName} ${data?.body.lastName} !`}
+          {`${userFirstName} ${userLastName} !`}
         </h1>
-        <button className={`edit-button ${isEditOpen ? "hidden" : ""}`} onClick={openEdit}>
+        <button
+          className={`edit-button ${isEditOpen ? 'hidden' : ''}`}
+          onClick={openEdit}
+        >
           Edit Name
         </button>
-        <EditUser 
-          userFirstName={data?.body.firstName}
-          userLastName={data?.body.lastName}
-          isEditOpen={isEditOpen} 
-          closeEdit={closeEdit} 
+        <EditUser
+          userFirstName={userFirstName}
+          userLastName={userLastName}
+          isEditOpen={isEditOpen}
+          closeEdit={closeEdit}
+          fetchUserData={fetchUserData}
         />
       </div>
       <h2 className="sr-only">Accounts</h2>

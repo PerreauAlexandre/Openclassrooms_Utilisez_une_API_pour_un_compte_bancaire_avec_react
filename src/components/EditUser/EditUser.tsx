@@ -1,12 +1,15 @@
 import './EditUser.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useUpdateUserMutation } from '../../services/userApi'
+import { updateUserNames } from '../../pages/User/userSlice'
 
 interface EditUserProps {
   userFirstName: string | undefined
   userLastName: string | undefined
   isEditOpen: boolean
   closeEdit: () => void
+  fetchUserData: () => void
 }
 
 function EditUser({
@@ -14,10 +17,12 @@ function EditUser({
   userLastName,
   isEditOpen,
   closeEdit,
+  fetchUserData,
 }: EditUserProps) {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [updateUser] = useUpdateUserMutation()
+  const dispatch = useDispatch()
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
+  const [updateUser, {isSuccess}] = useUpdateUserMutation()
 
   function handleCancel() {
     closeEdit()
@@ -28,9 +33,16 @@ function EditUser({
   async function handleSave() {
     closeEdit()
     await updateUser({firstName, lastName})
+    dispatch(updateUserNames({ firstName: firstName, lastName: lastName }))
     setFirstName('')
     setFirstName('')
   }
+
+  useEffect(() => {
+      if (isSuccess) {
+        fetchUserData()
+      }
+    }, [isSuccess, fetchUserData])
 
   return (
     <div className={`edit-user ${!isEditOpen ? 'hidden' : ''}`}>

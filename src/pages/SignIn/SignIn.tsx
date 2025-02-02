@@ -1,26 +1,29 @@
 import { useState, useEffect } from 'react'
 import { useLoginMutation } from '../../services/userApi'
+import { useDispatch } from 'react-redux'
+import { setToken } from './signInSlice'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 
 function SignIn() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const dispatch = useDispatch()
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [login, { isLoading, isSuccess, isError, data }] = useLoginMutation()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit (e: React.FormEvent) {
     e.preventDefault()
     await login({ email, password })
   }
 
   useEffect(() => {
     if (isSuccess && data) {
-      localStorage.setItem('token', data.body.token)
+      dispatch(setToken(data.body.token))
       navigate('/user')
     }
-  }, [isSuccess, data, navigate])
+  }, [isSuccess, data, navigate, dispatch])
 
   return (
     <main className="main bg-dark">
