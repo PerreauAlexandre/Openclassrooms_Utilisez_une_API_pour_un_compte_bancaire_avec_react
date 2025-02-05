@@ -39,7 +39,7 @@ function User() {
   return isLoading ? (
     <div>Loading...</div>
   ) : isError ? (
-    <Navigate to="/error" />
+    <Navigate to="/sign-in" />
   ) : (
     <main className="main bg-dark">
       <div className="header">

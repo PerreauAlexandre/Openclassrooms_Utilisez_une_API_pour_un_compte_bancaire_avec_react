@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserFirstName, getToken } from '../../app/selector'
 import { signOut } from '../../pages/SignIn/signInSlice'
+import { persistor } from '../../app/store'
 import argentBankLogo from '../../assets/argentBankLogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
@@ -12,8 +13,9 @@ function Header() {
   const userFirstName = useSelector(getUserFirstName)
   const token = useSelector(getToken)
 
-  function handleLogOut() {
+  function handleLSignOut() {
     dispatch(signOut())
+    persistor.purge()
   }
 
   function links() {
@@ -24,7 +26,7 @@ function Header() {
             <FontAwesomeIcon icon={faCircleUser} />
             {userFirstName}
           </Link>
-          <Link to="/" className="main-nav-item" onClick={handleLogOut}>
+          <Link to="/" className="main-nav-item" onClick={handleLSignOut}>
             <FontAwesomeIcon icon={faRightFromBracket} />
             Sign Out
           </Link>

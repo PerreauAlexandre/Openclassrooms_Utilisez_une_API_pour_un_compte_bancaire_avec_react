@@ -46,13 +46,14 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3001/api/v1/',
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).signIn.token
+      const token = (getState() as RootState).signIn?.token
       if (token) {
         headers.set('Authorization', `Bearer ${token}`)
       }
       return headers
     },
   }),
+
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (loginParams) => ({

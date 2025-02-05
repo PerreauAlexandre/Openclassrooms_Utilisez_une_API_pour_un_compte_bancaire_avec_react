@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useLoginMutation } from '../../services/userApi'
-import { useDispatch } from 'react-redux'
-import { setToken } from './signInSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { setRememberMe, setToken } from './signInSlice'
+import { getRememberMe } from '../../app/selector'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
@@ -9,11 +10,12 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
 function SignIn() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const rememberMe = useSelector(getRememberMe)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [login, { isLoading, isSuccess, isError, data }] = useLoginMutation()
 
-  async function handleSubmit (e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     await login({ email, password })
   }
@@ -50,7 +52,12 @@ function SignIn() {
             />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="remember-me" />
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={rememberMe}
+              onChange={(e) => dispatch(setRememberMe(e.target.checked))}
+            />
             <label htmlFor="remember-me">Remember me</label>
           </div>
           <button className="sign-in-button" type="submit">
