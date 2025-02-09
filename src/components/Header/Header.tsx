@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserFirstName, getToken } from '../../app/selector'
 import { signOut } from '../../pages/SignIn/signInSlice'
-import { persistor } from '../../app/store'
+import { clearUser } from '../../pages/User/userSlice'
 import argentBankLogo from '../../assets/argentBankLogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +15,7 @@ function Header() {
 
   function handleLSignOut() {
     dispatch(signOut())
-    persistor.purge()
+    dispatch(clearUser())
   }
 
   function links() {
