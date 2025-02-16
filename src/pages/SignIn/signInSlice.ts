@@ -21,7 +21,6 @@ const signInSlice = createSlice({
   reducers: {
     setRememberMe: (state, action) => {
       state.rememberMe = action.payload
-      console.log(action.payload.toString())
       localStorage.setItem('rememberMe', action.payload.toString())
     },
     setToken: (state, action) => {
